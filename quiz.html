@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Притяжательные и национальности</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F2F0F6;
+    --paper-raised: #FBFAFD;
+    --ink: #211E2C;
+    --ink-soft: #5B5768;
+    --line: #D9D5E3;
+    --accent: #3E7C74;
+    --accent-soft: #DCEAE7;
+    --good: #3E7C74;
+    --good-soft: #DCEAE7;
+    --bad: #B5502F;
+    --bad-soft: #F3E1D8;
+    --shadow: rgba(33,30,44,0.10);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper: #1B1922;
+      --paper-raised: #242130;
+      --ink: #EDEAF3;
+      --ink-soft: #A9A3B8;
+      --line: #37334500;
+      --line: #37334A;
+      --accent: #6FBBAF;
+      --accent-soft: #23383A;
+      --good: #6FBBAF;
+      --good-soft: #23383A;
+      --bad: #E08B67;
+      --bad-soft: #3B2A24;
+      --shadow: rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #1B1922;
+    --paper-raised: #242130;
+    --ink: #EDEAF3;
+    --ink-soft: #A9A3B8;
+    --line: #37334A;
+    --accent: #6FBBAF;
+    --accent-soft: #23383A;
+    --good: #6FBBAF;
+    --good-soft: #23383A;
+    --bad: #E08B67;
+    --bad-soft: #3B2A24;
+    --shadow: rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:48px 20px 80px;
+    line-height:1.5;
+  }
+  .app{
+    width:100%;
+    max-width:640px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:36px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .masthead h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:26px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .masthead .tag{
+    font-size:13px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    margin-left:16px;
+  }
+
+  /* ---------- Start screen ---------- */
+  .intro-copy{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin:0 0 28px;
+    max-width:52ch;
+  }
+  .mode-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .mode-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 20px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    text-align:left;
+    font-family:var(--font-body);
+    color:var(--ink);
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .mode-card:hover{ border-color:var(--accent); }
+  .mode-card:active{ transform:scale(0.99); }
+  .mode-card .mc-left{ display:flex; flex-direction:column; gap:3px; }
+  .mode-card .mc-title{ font-size:16px; font-weight:600; }
+  .mode-card .mc-sub{ font-size:13px; color:var(--ink-soft); }
+  .mode-card .mc-count{
+    font-family:var(--font-display);
+    font-size:28px;
+    color:var(--accent);
+    flex-shrink:0;
+  }
+  .mode-card .mc-best{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  /* ---------- Quiz screen ---------- */
+  .quiz-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:28px;
+  }
+  .progress-track{
+    flex:1;
+    height:4px;
+    background:var(--line);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--accent);
+    border-radius:2px;
+    transition:width .25s ease;
+  }
+  .progress-label{
+    font-size:13px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 32px;
+    box-shadow:0 6px 20px var(--shadow);
+  }
+  .category-label{
+    font-size:12.5px;
+    color:var(--accent);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .question-text{
+    font-family:var(--font-display);
+    font-size:24px;
+    font-weight:500;
+    line-height:1.35;
+    margin:0 0 28px;
+  }
+  .question-text .gap{
+    display:inline-block;
+    min-width:2.4em;
+    border-bottom:2px solid var(--accent);
+    text-align:center;
+    transition:background .2s ease, color .2s ease;
+  }
+  .question-text .gap.filled{
+    border-bottom:none;
+    background:var(--good-soft);
+    color:var(--good);
+    font-weight:700;
+    padding:1px 8px;
+    border-radius:5px;
+  }
+  .question-text .answer-line{
+    color:var(--ink-soft);
+    font-size:0.72em;
+  }
+
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:480px){
+    .options{ grid-template-columns:1fr; }
+  }
+  .option{
+    padding:14px 16px;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    font-family:var(--font-body);
+    font-size:15px;
+    color:var(--ink);
+    cursor:pointer;
+    text-align:left;
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .option:hover:not(:disabled){ border-color:var(--accent); }
+  .option:disabled{ cursor:default; }
+  .option.correct{
+    background:var(--good-soft);
+    border-color:var(--good);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .option.incorrect{
+    background:var(--bad-soft);
+    border-color:var(--bad);
+    color:var(--ink);
+  }
+
+  .card-footer{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:24px;
+    min-height:40px;
+  }
+  .next-btn{
+    padding:11px 22px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:8px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .next-btn:hover{ opacity:0.88; }
+
+  .quit-row{
+    text-align:center;
+    margin-top:20px;
+  }
+  .quit-link{
+    font-size:13px;
+    color:var(--ink-soft);
+    background:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:3px;
+    font-family:var(--font-body);
+  }
+
+  /* ---------- Result screen ---------- */
+  .result-hero{
+    text-align:center;
+    padding:8px 0 30px;
+  }
+  .result-score{
+    font-family:var(--font-display);
+    font-size:64px;
+    font-weight:600;
+    line-height:1;
+    margin:0;
+  }
+  .result-of{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin-top:6px;
+  }
+  .result-note{
+    font-size:14px;
+    color:var(--accent);
+    margin-top:10px;
+    font-weight:600;
+  }
+
+  .breakdown{
+    display:flex;
+    gap:12px;
+    margin-bottom:28px;
+  }
+  .breakdown-item{
+    flex:1;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    text-align:center;
+  }
+  .breakdown-item .num{
+    font-family:var(--font-display);
+    font-size:22px;
+  }
+  .breakdown-item .lbl{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  .review-title{
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+  }
+  .review-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:28px;
+  }
+  .review-item{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-left:3px solid var(--bad);
+    border-radius:8px;
+    padding:12px 16px;
+    font-size:14px;
+  }
+  .review-item .rq{ margin-bottom:6px; }
+  .review-item .ra{ color:var(--ink-soft); }
+  .review-item .ra b{ color:var(--good); font-weight:600; }
+  .review-item .ra s{ color:var(--bad); opacity:0.85; }
+  .all-correct{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:14px;
+    padding:14px 0 28px;
+  }
+
+  .result-actions{
+    display:flex;
+    gap:10px;
+  }
+  .btn-primary, .btn-secondary{
+    flex:1;
+    padding:13px 16px;
+    border-radius:9px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+    border:1.5px solid transparent;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .btn-primary:hover{ opacity:0.88; }
+  .btn-secondary{
+    background:transparent;
+    border-color:var(--line);
+    color:var(--ink);
+  }
+  .btn-secondary:hover{ border-color:var(--accent); }
+
+  .hidden{ display:none !important; }
+
+  ::selection{ background:var(--accent-soft); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="masthead">
+    <h1>Притяж. + национальности</h1>
+    <span class="tag" id="mastheadTag">60 вопросов</span>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="startScreen">
+    <p class="intro-copy">Тренажёр перед контрольной. Возможные притяжательные местоимения / прилагательные и то, как называются жители разных стран по‑английски. Выбери, что повторяем.</p>
+    <div class="mode-list">
+      <button class="mode-card" data-mode="poss">
+        <span class="mc-left">
+          <span class="mc-title">Притяжательные</span>
+          <span class="mc-sub">my / mine, her / hers, their / theirs…</span>
+          <span class="mc-best" id="bestPoss"></span>
+        </span>
+        <span class="mc-count">30</span>
+      </button>
+      <button class="mode-card" data-mode="nat">
+        <span class="mc-left">
+          <span class="mc-title">Национальности</span>
+          <span class="mc-sub">страна ⇄ житель, в обе стороны</span>
+          <span class="mc-best" id="bestNat"></span>
+        </span>
+        <span class="mc-count">30</span>
+      </button>
+      <button class="mode-card" data-mode="all">
+        <span class="mc-left">
+          <span class="mc-title">Всё вместе</span>
+          <span class="mc-sub">полная проверка, вперемешку</span>
+          <span class="mc-best" id="bestAll"></span>
+        </span>
+        <span class="mc-count">60</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" class="hidden">
+    <div class="quiz-head">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">1 / 30</div>
+    </div>
+    <div class="card">
+      <div class="category-label" id="categoryLabel">ПРИТЯЖАТЕЛЬНЫЕ</div>
+      <p class="question-text" id="questionText"></p>
+      <div class="options" id="optionsGrid"></div>
+      <div class="card-footer" id="cardFooter"></div>
+    </div>
+    <div class="quit-row"><button class="quit-link" id="quitBtn">Прервать и вернуться к выбору</button></div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="resultScreen" class="hidden">
+    <div class="result-hero">
+      <p class="result-score" id="resultScore">0/0</p>
+      <p class="result-of" id="resultPercent">0% правильных</p>
+      <p class="result-note hidden" id="resultBest">Новый личный рекорд</p>
+    </div>
+    <div class="breakdown" id="breakdownRow"></div>
+    <p class="review-title" id="reviewTitle">Стоит повторить</p>
+    <div class="review-list" id="reviewList"></div>
+    <p class="all-correct hidden" id="allCorrectMsg">Ни одной ошибки. Отлично.</p>
+    <div class="result-actions">
+      <button class="btn-secondary" id="backBtn">Другой раздел</button>
+      <button class="btn-primary" id="retryBtn">Пройти ещё раз</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  // ---------- DATA ----------
+  const possQuestions = [
+    ["This is ___ car.","(I)",["my","mine","me","I's"],0],
+    ["Is this pen ___?","(you)",["your","yours","you's","yourself"],1],
+    ["___ dog is very friendly.","(he)",["His","He's","Him","Hers"],0],
+    ["This bag is ___.","(she)",["her","hers","she's","herself"],1],
+    ["The cat licked ___ paw.","(it)",["it's","its","its'","it"],1],
+    ["We love ___ new house.","(we)",["our","ours","us","we's"],0],
+    ["That house is ___.","(we)",["our","ours","us","we"],1],
+    ["They finished ___ homework.","(they)",["their","theirs","them","they's"],0],
+    ["This book is ___.","(they)",["their","theirs","them","they"],1],
+    ["Is that ___ phone?","(you)",["your","yours","you","you's"],0],
+    ["___ name is Anna.","(I)",["My","Mine","Me","I's"],0],
+    ["This is not my pen, it's ___.","(he)",["him","his","he's","himself"],1],
+    ["___ sister lives in Paris.","(she)",["Hers","Her","She's","Herself"],1],
+    ["That umbrella is ___.","(I)",["my","mine","me","myself"],1],
+    ["The dog wagged ___ tail.","(it)",["it's","its","their","it"],1],
+    ["This is ___ classroom.","(we)",["our","ours","us","we"],0],
+    ["Are these ___ keys?","(you)",["your","yours","you","you's"],0],
+    ["That car is ___, not mine.","(he)",["he","his","him","he's"],1],
+    ["___ parents are teachers.","(they)",["Theirs","Their","They","Them"],1],
+    ["This seat is ___.","(she)",["her","hers","she","herself"],1],
+    ["___ team won the match.","(we)",["Our","Ours","Us","We's"],0],
+    ["Whose bag is this? It's ___.","(I)",["my","mine","me","I"],1],
+    ["___ eyes are blue.","(she)",["Hers","Her","She's","Herself"],1],
+    ["The children lost ___ toys.","(they)",["theirs","their","them","they"],1],
+    ["Is this seat ___?","(he)",["he","him","his","he's"],2],
+    ["___ house has a garden.","(they)",["Theirs","Their","Them","They's"],1],
+    ["This laptop is ___.","(you)",["your","yours","you","yourself"],1],
+    ["The bird built ___ nest.","(it)",["it's","its","their","it"],1],
+    ["___ idea was brilliant.","(she)",["Hers","Her","She's","Herself"],1],
+    ["That's ___ — I recognize it.","(I)",["my","mine","me","myself"],1]
+  ];
+
+  const natQuestions = [
+    ["Как называется житель страны America?",null,["American","Americanish","Americain","Americanian"],0],
+    ["Из какой страны British?",null,["Britain","Britanish","Britainian","Britian"],0],
+    ["Как называется житель страны Germany?",null,["German","Germanish","Germanian","Germaniac"],0],
+    ["Как называется житель страны Spain?",null,["Spanish","Spainish","Spanian","Spanor"],0],
+    ["Как называется житель страны Japan?",null,["Japanese","Japanish","Japaneese","Japanian"],0],
+    ["Как называется житель страны Ukraine?",null,["Ukrainian","Ukrainish","Ukranian","Ukraineian"],0],
+    ["Как называется житель страны Brazil?",null,["Brazilian","Brazilish","Brazillian","Braziliar"],0],
+    ["Как называется житель страны India?",null,["Indian","Indianish","Indiane","Indain"],0],
+    ["Как называется житель страны Greece?",null,["Greek","Greekish","Greecian","Greeky"],0],
+    ["Как называется житель страны Australia?",null,["Australian","Australish","Austrailian","Australiane"],0],
+    ["Как называется житель страны Sweden?",null,["Swedish","Swedeish","Swedian","Swedenese"],0],
+    ["Как называется житель страны Switzerland?",null,["Swiss","Switzerlandish","Swissian","Switzish"],0],
+    ["Как называется житель страны Ireland?",null,["Irish","Irelandish","Ireish","Irian"],0],
+    ["Как называется житель страны Austria?",null,["Austrian","Austrish","Austrianish","Austrain"],0],
+    ["Как называется житель страны Finland?",null,["Finnish","Finlandish","Finnian","Finnese"],0],
+    ["Из какой страны Russian?",null,["Russia","Russiya","Rusia","Russland"],0],
+    ["Из какой страны French?",null,["France","Franch","Francia","Frence"],0],
+    ["Из какой страны Italian?",null,["Italy","Itali","Itally","Italia"],0],
+    ["Из какой страны Chinese?",null,["China","Chinia","Chyna","Sina"],0],
+    ["Из какой страны Polish?",null,["Poland","Polend","Polandia","Pholand"],0],
+    ["Из какой страны Canadian?",null,["Canada","Canda","Canadaa","Kanada"],0],
+    ["Из какой страны Mexican?",null,["Mexico","Mexicoo","Maxico","Mejico"],0],
+    ["Из какой страны Turkish?",null,["Turkey","Turkiye","Turky","Turkei"],0],
+    ["Из какой страны Egyptian?",null,["Egypt","Egipt","Egyptia","Egyptus"],0],
+    ["Из какой страны Dutch?",null,["Netherlands","Netherland","Nederlands","Netherlandia"],0],
+    ["Из какой страны Norwegian?",null,["Norway","Norwey","Norwage","Norwegia"],0],
+    ["Из какой страны Portuguese?",null,["Portugal","Portugual","Portugalia","Portugale"],0],
+    ["Из какой страны Scottish?",null,["Scotland","Scottland","Scotlandia","Scotlend"],0],
+    ["Из какой страны Belgian?",null,["Belgium","Belgia","Belguim","Belgum"],0],
+    ["Из какой страны Korean?",null,["South Korea","South Corea","Southkorea","South Koria"],0]
+  ];
+
+  function buildBank(rawList, category){
+    return rawList.map((row, i) => {
+      const [prompt, sub, opts, correctIdx] = row;
+      return {
+        id: category + i,
+        category: category,
+        prompt: prompt,
+        sub: sub,
+        options: opts,
+        correctText: opts[correctIdx]
+      };
+    });
+  }
+
+  const bankPoss = buildBank(possQuestions, "poss");
+  const bankNat  = buildBank(natQuestions, "nat");
+
+  const CATEGORY_LABEL = { poss: "ПРИТЯЖАТЕЛЬНЫЕ", nat: "НАЦИОНАЛЬНОСТИ" };
+
+  // ---------- STATE ----------
+  let currentMode = null;
+  let queue = [];
+  let idx = 0;
+  let answers = []; // {q, chosenText, isCorrect}
+  let answeredCurrent = false;
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  // ---------- STORAGE (per-viewer best score) ----------
+  function bestKey(mode){ return "quizBest_" + mode; }
+  function getBest(mode){
+    try{
+      const v = localStorage.getItem(bestKey(mode));
+      return v ? JSON.parse(v) : null;
+    }catch(e){ return null; }
+  }
+  function setBest(mode, score, total){
+    try{
+      const prev = getBest(mode);
+      if(!prev || score > prev.score){
+        localStorage.setItem(bestKey(mode), JSON.stringify({score, total}));
+        return true;
+      }
+    }catch(e){ /* ignore */ }
+    return false;
+  }
+  function renderBests(){
+    const map = {poss:"bestPoss", nat:"bestNat", all:"bestAll"};
+    Object.keys(map).forEach(mode=>{
+      const el = document.getElementById(map[mode]);
+      const b = getBest(mode);
+      el.textContent = b ? ("Рекорд: " + b.score + "/" + b.total) : "";
+    });
+  }
+
+  // ---------- SCREENS ----------
+  const startScreen = document.getElementById("startScreen");
+  const quizScreen = document.getElementById("quizScreen");
+  const resultScreen = document.getElementById("resultScreen");
+
+  function showScreen(name){
+    startScreen.classList.toggle("hidden", name !== "start");
+    quizScreen.classList.toggle("hidden", name !== "quiz");
+    resultScreen.classList.toggle("hidden", name !== "result");
+  }
+
+  document.querySelectorAll(".mode-card").forEach(btn=>{
+    btn.addEventListener("click", ()=> startQuiz(btn.dataset.mode));
+  });
+  document.getElementById("quitBtn").addEventListener("click", ()=>{
+    showScreen("start");
+    renderBests();
+  });
+  document.getElementById("backBtn").addEventListener("click", ()=>{
+    showScreen("start");
+    renderBests();
+  });
+  document.getElementById("retryBtn").addEventListener("click", ()=> startQuiz(currentMode));
+
+  function startQuiz(mode){
+    currentMode = mode;
+    let bank;
+    if(mode === "poss") bank = bankPoss;
+    else if(mode === "nat") bank = bankNat;
+    else bank = bankPoss.concat(bankNat);
+
+    queue = shuffle(bank).map(q => ({...q, shuffledOptions: shuffle(q.options)}));
+    idx = 0;
+    answers = [];
+    showScreen("quiz");
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    answeredCurrent = false;
+    const total = queue.length;
+    const q = queue[idx];
+
+    document.getElementById("progressLabel").textContent = (idx+1) + " / " + total;
+    document.getElementById("progressFill").style.width = ((idx)/total*100) + "%";
+    document.getElementById("categoryLabel").textContent = CATEGORY_LABEL[q.category];
+
+    let qText;
+    if(q.category === "poss"){
+      qText = q.prompt.replace("___", '<span class="gap" id="answerSlot">___</span>');
+      if(q.sub){
+        qText += "  <span style='color:var(--ink-soft); font-size:16px;'>" + q.sub + "</span>";
+      }
+    } else {
+      qText = q.prompt + ' <span class="answer-line">— <span class="gap" id="answerSlot">___</span></span>';
+    }
+    document.getElementById("questionText").innerHTML = qText;
+
+    const grid = document.getElementById("optionsGrid");
+    grid.innerHTML = "";
+    q.shuffledOptions.forEach(optText=>{
+      const b = document.createElement("button");
+      b.className = "option";
+      b.textContent = optText;
+      b.addEventListener("click", ()=> selectOption(optText, b));
+      grid.appendChild(b);
+    });
+
+    document.getElementById("cardFooter").innerHTML = "";
+  }
+
+  function selectOption(chosenText, btnEl){
+    if(answeredCurrent) return;
+    answeredCurrent = true;
+    const q = queue[idx];
+    const isCorrect = chosenText === q.correctText;
+
+    document.querySelectorAll("#optionsGrid .option").forEach(b=>{
+      b.disabled = true;
+      if(b.textContent === q.correctText){
+        b.classList.add("correct");
+      } else if(b === btnEl && !isCorrect){
+        b.classList.add("incorrect");
+      }
+    });
+
+    if(isCorrect){
+      const slot = document.getElementById("answerSlot");
+      if(slot){
+        slot.textContent = q.correctText;
+        slot.classList.add("filled");
+      }
+    }
+
+    answers.push({ q, chosenText, isCorrect });
+
+    const footer = document.getElementById("cardFooter");
+    const isLast = idx === queue.length - 1;
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "next-btn";
+    nextBtn.textContent = isLast ? "Смотреть результат" : "Далее";
+    nextBtn.addEventListener("click", ()=>{
+      if(isLast){
+        finishQuiz();
+      } else {
+        idx++;
+        renderQuestion();
+      }
+    });
+    footer.appendChild(nextBtn);
+  }
+
+  function finishQuiz(){
+    document.getElementById("progressFill").style.width = "100%";
+    const total = answers.length;
+    const score = answers.filter(a=>a.isCorrect).length;
+    const isNewBest = setBest(currentMode, score, total);
+
+    document.getElementById("resultScore").textContent = score + "/" + total;
+    document.getElementById("resultPercent").textContent = Math.round(score/total*100) + "% правильных";
+    document.getElementById("resultBest").classList.toggle("hidden", !isNewBest);
+
+    const breakdownRow = document.getElementById("breakdownRow");
+    breakdownRow.innerHTML = "";
+    if(currentMode === "all"){
+      ["poss","nat"].forEach(cat=>{
+        const catAnswers = answers.filter(a=>a.q.category===cat);
+        const catScore = catAnswers.filter(a=>a.isCorrect).length;
+        const div = document.createElement("div");
+        div.className = "breakdown-item";
+        div.innerHTML = '<div class="num">'+catScore+'/'+catAnswers.length+'</div><div class="lbl">'+(cat==="poss"?"Притяжательные":"Национальности")+'</div>';
+        breakdownRow.appendChild(div);
+      });
+    } else {
+      const div = document.createElement("div");
+      div.className = "breakdown-item";
+      div.innerHTML = '<div class="num">'+score+'/'+total+'</div><div class="lbl">'+(currentMode==="poss"?"Притяжательные":"Национальности")+'</div>';
+      breakdownRow.appendChild(div);
+    }
+
+    const wrong = answers.filter(a=>!a.isCorrect);
+    const reviewList = document.getElementById("reviewList");
+    const reviewTitle = document.getElementById("reviewTitle");
+    const allCorrectMsg = document.getElementById("allCorrectMsg");
+    reviewList.innerHTML = "";
+    if(wrong.length === 0){
+      reviewTitle.classList.add("hidden");
+      allCorrectMsg.classList.remove("hidden");
+    } else {
+      reviewTitle.classList.remove("hidden");
+      allCorrectMsg.classList.add("hidden");
+      wrong.forEach(a=>{
+        const div = document.createElement("div");
+        div.className = "review-item";
+        const promptClean = a.q.prompt.replace("___","___");
+        div.innerHTML =
+          '<div class="rq">'+promptClean+(a.q.sub ? ' <span style="color:var(--ink-soft)">'+a.q.sub+'</span>' : '')+'</div>'+
+          '<div class="ra">Твой ответ: <s>'+a.chosenText+'</s> · Правильно: <b>'+a.q.correctText+'</b></div>';
+        reviewList.appendChild(div);
+      });
+    }
+
+    showScreen("result");
+  }
+
+  renderBests();
+})();
+</script>
+</body>
+</html>
