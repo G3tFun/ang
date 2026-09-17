@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Притяжательные и национальности</title>
+<title>EasyEnglish</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -30,7 +30,6 @@
       --paper-raised: #242130;
       --ink: #EDEAF3;
       --ink-soft: #A9A3B8;
-      --line: #37334500;
       --line: #37334A;
       --accent: #6FBBAF;
       --accent-soft: #23383A;
@@ -104,12 +103,53 @@
     margin:0 0 28px;
     max-width:52ch;
   }
+  .lesson-title{
+    font-family:var(--font-display);
+    font-size:17px;
+    font-weight:600;
+    margin:26px 0 10px;
+    color:var(--ink);
+  }
+  .lesson-title:first-of-type{ margin-top:0; }
+  .lesson-sub{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:-6px 0 12px;
+  }
   .mode-list{
     display:flex;
     flex-direction:column;
     gap:10px;
     margin-bottom:8px;
   }
+  .mode-row{
+    display:flex;
+    align-items:stretch;
+    gap:8px;
+  }
+  .mode-row .mode-card{
+    flex:1;
+    width:auto;
+  }
+  .timer-btn{
+    flex-shrink:0;
+    width:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    color:var(--ink-soft);
+    font-size:21px;
+    line-height:1;
+    padding:0;
+    transition:border-color .15s ease, color .15s ease, transform .1s ease;
+  }
+  .timer-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .timer-btn:active{ transform:scale(0.94); }
+  .timer-btn-all{ background:var(--paper-raised); }
   .mode-card{
     display:flex;
     align-items:center;
@@ -124,9 +164,16 @@
     font-family:var(--font-body);
     color:var(--ink);
     transition:border-color .15s ease, transform .1s ease;
+    width:100%;
   }
   .mode-card:hover{ border-color:var(--accent); }
   .mode-card:active{ transform:scale(0.99); }
+  .mode-card.mode-card-combo{ background:var(--accent-soft); border-color:var(--accent); }
+  .mode-card.mode-card-all{ background:#211E2C; border-color:#211E2C; color:#FBFAFD; }
+  .mode-card.mode-card-all .mc-title{ color:#FBFAFD; }
+  .mode-card.mode-card-all .mc-sub{ color:rgba(251,250,253,0.7); }
+  .mode-card.mode-card-all .mc-count{ color:#FBFAFD; }
+  .mode-card.mode-card-all .mc-best{ color:rgba(251,250,253,0.7); }
   .mode-card .mc-left{ display:flex; flex-direction:column; gap:3px; }
   .mode-card .mc-title{ font-size:16px; font-weight:600; }
   .mode-card .mc-sub{ font-size:13px; color:var(--ink-soft); }
@@ -169,6 +216,72 @@
     font-variant-numeric:tabular-nums;
   }
 
+  .qtimer{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-shrink:0;
+  }
+  .qtimer-track{
+    width:38px;
+    height:6px;
+    background:var(--line);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .qtimer-fill{
+    height:100%;
+    width:100%;
+    background:var(--accent);
+    border-radius:3px;
+    transition:width .1s linear, background .2s ease;
+  }
+  .qtimer-num{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+    min-width:12px;
+    text-align:right;
+  }
+  .qtimer.urgent .qtimer-fill{ background:var(--bad); }
+  .qtimer.urgent .qtimer-num{ color:var(--bad); font-weight:600; }
+
+  /* ---------- Countdown overlay ---------- */
+  .countdown-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,18,26,0.78);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:60;
+  }
+  .countdown-box{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .countdown-number{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:96px;
+    color:#FBFAFD;
+    line-height:1;
+  }
+  .countdown-number.go{ font-size:44px; }
+  .countdown-number.pulse{
+    animation: countdownPulse .5s ease;
+  }
+  @keyframes countdownPulse{
+    from{ transform:scale(1.5); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+  }
+  .countdown-caption{
+    font-size:14px;
+    color:rgba(251,250,253,0.7);
+  }
+
   .card{
     background:var(--paper-raised);
     border:1px solid var(--line);
@@ -207,6 +320,42 @@
   .question-text .answer-line{
     color:var(--ink-soft);
     font-size:0.72em;
+  }
+
+  /* time question given-value block */
+  .time-given{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .time-digits{
+    font-family:var(--font-display);
+    font-size:46px;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .period-hint{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-family:var(--font-body);
+  }
+  .time-question-label{
+    text-align:center;
+    font-size:16px;
+    color:var(--ink-soft);
+    font-family:var(--font-body);
+    font-weight:500;
+    margin-bottom:6px;
+  }
+  .time-answer-line{
+    text-align:center;
+    font-size:15px;
+    color:var(--ink-soft);
   }
 
   .options{
@@ -303,11 +452,13 @@
 
   .breakdown{
     display:flex;
-    gap:12px;
+    flex-wrap:wrap;
+    gap:10px;
     margin-bottom:28px;
   }
   .breakdown-item{
-    flex:1;
+    flex:1 1 calc(50% - 5px);
+    min-width:120px;
     background:var(--paper-raised);
     border:1px solid var(--line);
     border-radius:10px;
@@ -420,44 +571,136 @@
     gap:10px;
   }
 
+  .settings-group{ margin-bottom:18px; }
+  .settings-label{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+    font-weight:600;
+  }
+  .segmented{ display:flex; gap:8px; }
+  .seg-btn{
+    flex:1;
+    padding:11px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:border-color .12s ease, background .12s ease, color .12s ease;
+  }
+  .seg-btn.active{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    color:var(--accent);
+  }
+
   ::selection{ background:var(--accent-soft); }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="masthead">
-    <h1>Притяж. + национальности</h1>
-    <span class="tag" id="mastheadTag">60 вопросов</span>
+    <h1>EasyEnglish</h1>
+    <span class="tag" id="mastheadTag">100 вопросов</span>
   </div>
 
   <!-- START SCREEN -->
   <div id="startScreen">
-    <p class="intro-copy">Тренажёр перед контрольной. Возможные притяжательные местоимения / прилагательные и то, как называются жители разных стран по‑английски. Выбери, что повторяем.</p>
+    <p class="intro-copy">Тренажёр перед контрольной. Темы собраны в два урока — тренируй раздел, урок целиком, или пройди вообще всё.</p>
+
+    <h2 class="lesson-title">Урок 1</h2>
+    <p class="lesson-sub">местоимения и национальности</p>
     <div class="mode-list">
-      <button class="mode-card" data-mode="poss">
-        <span class="mc-left">
-          <span class="mc-title">Притяжательные</span>
-          <span class="mc-sub">my / mine, her / hers, their / theirs…</span>
-          <span class="mc-best" id="bestPoss"></span>
-        </span>
-        <span class="mc-count">30</span>
-      </button>
-      <button class="mode-card" data-mode="nat">
-        <span class="mc-left">
-          <span class="mc-title">Национальности</span>
-          <span class="mc-sub">страна ⇄ житель, в обе стороны</span>
-          <span class="mc-best" id="bestNat"></span>
-        </span>
-        <span class="mc-count">30</span>
-      </button>
-      <button class="mode-card" data-mode="all">
-        <span class="mc-left">
-          <span class="mc-title">Всё вместе</span>
-          <span class="mc-sub">полная проверка, вперемешку</span>
-          <span class="mc-best" id="bestAll"></span>
-        </span>
-        <span class="mc-count">60</span>
-      </button>
+      <div class="mode-row">
+        <button class="mode-card" data-mode="poss">
+          <span class="mc-left">
+            <span class="mc-title">Притяжательные</span>
+            <span class="mc-sub">my / mine, her / hers, their / theirs…</span>
+            <span class="mc-best" id="bestPoss"></span>
+          </span>
+          <span class="mc-count">30</span>
+        </button>
+        <button class="timer-btn" data-mode="poss" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-card" data-mode="nat">
+          <span class="mc-left">
+            <span class="mc-title">Национальности</span>
+            <span class="mc-sub">страна ⇄ житель, в обе стороны</span>
+            <span class="mc-best" id="bestNat"></span>
+          </span>
+          <span class="mc-count">30</span>
+        </button>
+        <button class="timer-btn" data-mode="nat" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-card mode-card-combo" data-mode="lesson1">
+          <span class="mc-left">
+            <span class="mc-title">Урок 1 целиком</span>
+            <span class="mc-sub">притяжательные + национальности, вперемешку</span>
+            <span class="mc-best" id="bestLesson1"></span>
+          </span>
+          <span class="mc-count">60</span>
+        </button>
+        <button class="timer-btn" data-mode="lesson1" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+    </div>
+
+    <h2 class="lesson-title">Урок 2</h2>
+    <p class="lesson-sub">время и порядковые числительные</p>
+    <div class="mode-list">
+      <div class="mode-row">
+        <button class="mode-card" data-mode="time">
+          <span class="mc-left">
+            <span class="mc-title">Время</span>
+            <span class="mc-sub">6:30 → half past six</span>
+            <span class="mc-best" id="bestTime"></span>
+          </span>
+          <span class="mc-count">20</span>
+        </button>
+        <button class="timer-btn" data-mode="time" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-card" data-mode="ord">
+          <span class="mc-left">
+            <span class="mc-title">Порядковые числительные</span>
+            <span class="mc-sub">38 → thirty-eighth, и в обратную сторону</span>
+            <span class="mc-best" id="bestOrd"></span>
+          </span>
+          <span class="mc-count">20</span>
+        </button>
+        <button class="timer-btn" data-mode="ord" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-card mode-card-combo" data-mode="lesson2">
+          <span class="mc-left">
+            <span class="mc-title">Урок 2 целиком</span>
+            <span class="mc-sub">время + числительные, вперемешку</span>
+            <span class="mc-best" id="bestLesson2"></span>
+          </span>
+          <span class="mc-count">40</span>
+        </button>
+        <button class="timer-btn" data-mode="lesson2" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+    </div>
+
+    <h2 class="lesson-title">Оба урока</h2>
+    <div class="mode-list">
+      <div class="mode-row">
+        <button class="mode-card mode-card-all" data-mode="all">
+          <span class="mc-left">
+            <span class="mc-title">Все темы</span>
+            <span class="mc-sub">абсолютно все вопросы, вперемешку</span>
+            <span class="mc-best" id="bestAll"></span>
+          </span>
+          <span class="mc-count">100</span>
+        </button>
+        <button class="timer-btn timer-btn-all" data-mode="all" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
     </div>
   </div>
 
@@ -466,14 +709,26 @@
     <div class="quiz-head">
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-label" id="progressLabel">1 / 30</div>
+      <div class="qtimer hidden" id="qTimerWrap">
+        <div class="qtimer-track"><div class="qtimer-fill" id="qTimerFill"></div></div>
+        <div class="qtimer-num" id="qTimerNum">5</div>
+      </div>
     </div>
     <div class="card">
       <div class="category-label" id="categoryLabel">ПРИТЯЖАТЕЛЬНЫЕ</div>
-      <p class="question-text" id="questionText"></p>
+      <div class="question-text" id="questionText"></div>
       <div class="options" id="optionsGrid"></div>
       <div class="card-footer" id="cardFooter"></div>
     </div>
     <div class="quit-row"><button class="quit-link" id="quitBtn">Прервать и вернуться к выбору</button></div>
+  </div>
+
+  <!-- COUNTDOWN OVERLAY (timed mode) -->
+  <div id="countdownOverlay" class="countdown-overlay hidden">
+    <div class="countdown-box">
+      <div class="countdown-number" id="countdownNumber">3</div>
+      <div class="countdown-caption">5 секунд на каждый ответ</div>
+    </div>
   </div>
 
   <!-- CONFIRM MODAL -->
@@ -484,6 +739,32 @@
       <div class="modal-actions">
         <button class="btn-secondary" id="modalCancel">Остаться</button>
         <button class="btn-primary" id="modalConfirm">Да, выйти</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIME SETTINGS MODAL -->
+  <div id="timeSettingsOverlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <p class="modal-title">Формат времени</p>
+      <p class="modal-text">В этом прохождении есть вопросы про время. Выбери, как его показывать.</p>
+      <div class="settings-group">
+        <p class="settings-label">Отображение</p>
+        <div class="segmented" id="displaySegmented">
+          <button type="button" class="seg-btn" data-value="clock">Циферблат</button>
+          <button type="button" class="seg-btn" data-value="digits">Цифрами</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <p class="settings-label">Формат часов</p>
+        <div class="segmented" id="formatSegmented">
+          <button type="button" class="seg-btn" data-value="24">24-часовой</button>
+          <button type="button" class="seg-btn" data-value="12">12-часовой</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="timeSettingsCancel">Отмена</button>
+        <button class="btn-primary" id="timeSettingsStart">Начать</button>
       </div>
     </div>
   </div>
@@ -576,6 +857,188 @@
     ["Из какой страны Korean?",null,["South Korea","South Corea","Southkorea","South Koria"],0]
   ];
 
+  // время хранится как hour24/minute, а не готовой строкой —
+  // подпись подставляется динамически в зависимости от выбранного формата
+  const timeQuestions = [
+    {hour24:6,  minute:0,  options:["six o'clock","six o'clocks","o'clock six","six's clock"]},
+    {hour24:6,  minute:15, options:["quarter past six","quarter to six","six quarter past","quarter past to six"]},
+    {hour24:6,  minute:30, options:["half past six","half to six","six thirty past","half past to six"]},
+    {hour24:6,  minute:45, options:["quarter to seven","quarter past seven","quarter to six","seven quarter to"]},
+    {hour24:6,  minute:10, options:["ten past six","ten to six","six past ten","ten's past six"]},
+    {hour24:6,  minute:20, options:["twenty past six","twenty to six","six twenty past","twenty's past six"]},
+    {hour24:6,  minute:40, options:["twenty to seven","twenty past seven","twenty to six","seven twenty to"]},
+    {hour24:6,  minute:50, options:["ten to seven","ten past seven","ten to six","seven ten to"]},
+    {hour24:6,  minute:5,  options:["five past six","five to six","six five past","five's past six"]},
+    {hour24:6,  minute:55, options:["five to seven","five past seven","five to six","seven five to"]},
+    {hour24:12, minute:0,  options:["It's midday.","It's midnight.","It's noon o'clock.","It's twelve to."], periodMatters:true, periodHint:"полдень", periodIcon:"☀️"},
+    {hour24:0,  minute:0,  options:["It's midnight.","It's midday.","It's twelve past.","It's zero o'clock."], periodMatters:true, periodHint:"полночь", periodIcon:"🌙"},
+    {hour24:15, minute:0,  options:["three o'clock in the afternoon","three o'clock in the morning","afternoon three o'clock","three past afternoon"], periodMatters:true, periodHint:"день", periodIcon:"🌤️"},
+    {hour24:9,  minute:0,  options:["nine o'clock in the morning","nine o'clock in the evening","morning nine o'clock","nine past morning"], periodMatters:true, periodHint:"утро", periodIcon:"🌅"},
+    {hour24:19, minute:0,  options:["seven o'clock in the evening","seven o'clock in the morning","evening seven o'clock","seven past evening"], periodMatters:true, periodHint:"вечер", periodIcon:"🌆"},
+    {hour24:1,  minute:30, options:["half past one","half to one","one thirty to","half one past"]},
+    {hour24:2,  minute:45, options:["quarter to three","quarter past three","quarter to two","three quarter to"]},
+    {hour24:4,  minute:15, options:["quarter past four","quarter to four","four quarter past","quarter past to four"]},
+    {hour24:8,  minute:35, options:["twenty-five to nine","twenty-five past nine","twenty-five to eight","nine twenty-five to"]},
+    {hour24:10, minute:25, options:["twenty-five past ten","twenty-five to ten","ten twenty-five past","twenty-five's past ten"]}
+  ];
+
+  // ---- Порядковые числительные: генерируем вопросы в обе стороны ----
+  // "Порядковое числительное 38?" -> thirty-eighth
+  // "Что означает thirty-eighth?" -> 38
+  const onesWords    = ["","one","two","three","four","five","six","seven","eight","nine"];
+  const teensWords   = ["ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+  const tensWords    = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+  const onesOrdinal  = ["","first","second","third","fourth","fifth","sixth","seventh","eighth","ninth"];
+  const teensOrdinal = ["tenth","eleventh","twelfth","thirteenth","fourteenth","fifteenth","sixteenth","seventeenth","eighteenth","nineteenth"];
+  const tensOrdinal  = ["","","twentieth","thirtieth","fortieth","fiftieth","sixtieth","seventieth","eightieth","ninetieth"];
+
+  function cardinalToWords(n){
+    if(n === 100) return "one hundred";
+    if(n < 10) return onesWords[n];
+    if(n < 20) return teensWords[n-10];
+    const t = Math.floor(n/10), o = n%10;
+    return o === 0 ? tensWords[t] : tensWords[t] + "-" + onesWords[o];
+  }
+  function ordinalToWords(n){
+    if(n === 100) return "one hundredth";
+    if(n < 10) return onesOrdinal[n];
+    if(n < 20) return teensOrdinal[n-10];
+    const t = Math.floor(n/10), o = n%10;
+    return o === 0 ? tensOrdinal[t] : tensWords[t] + "-" + onesOrdinal[o];
+  }
+
+  // ---- Генераторы неправильных вариантов для порядковых числительных ----
+
+  // Правдоподобные орфографические ошибки в самом порядковом слове
+  // (для направления "число -> слово")
+  function generateOrdWrongSpellings(correctWord, count){
+    const candidates = new Set();
+
+    // типичные ошибки в неправильных окончаниях
+    const irregularFixes = { "eighth":"eigth", "ninth":"nineth", "fifth":"fiveth", "twelfth":"twelveth" };
+    Object.keys(irregularFixes).forEach(k=>{
+      if(correctWord.endsWith(k)){
+        candidates.add(correctWord.slice(0, correctWord.length - k.length) + irregularFixes[k]);
+      }
+    });
+
+    // "-ieth" (twentieth, thirtieth...) часто путают с "-yeth"/"-ith"
+    if(correctWord.includes("ieth")){
+      candidates.add(correctWord.replace("ieth","yeth"));
+      candidates.add(correctWord.replace("ieth","ith"));
+    }
+
+    // пропущена буква перед "th"
+    if(correctWord.endsWith("th") && correctWord.length > 3){
+      candidates.add(correctWord.slice(0,-3) + correctWord.slice(-2));
+    }
+
+    // удвоена согласная перед "th"
+    if(correctWord.endsWith("th")){
+      const base = correctWord.slice(0,-2);
+      const lastChar = base.slice(-1);
+      candidates.add(base + lastChar + "th");
+    }
+
+    // пропущен дефис у составных числительных
+    if(correctWord.includes("-")){
+      candidates.add(correctWord.replace("-",""));
+    }
+
+    // переставлены местами соседние буквы где-то в середине слова
+    if(correctWord.length > 4){
+      const core = correctWord.replace("-","");
+      const i = 2 + Math.floor(Math.random() * (core.length - 3));
+      const arr = core.split("");
+      const tmp = arr[i]; arr[i] = arr[i+1]; arr[i+1] = tmp;
+      candidates.add(arr.join(""));
+    }
+
+    candidates.delete(correctWord);
+
+    // если вариантов не хватает — добираем случайными мутациями буквы
+    let guard = 0;
+    while(candidates.size < count && guard < 30){
+      guard++;
+      const arr = correctWord.replace("-","").split("");
+      const i = Math.floor(Math.random() * arr.length);
+      const action = Math.floor(Math.random() * 3);
+      if(action === 0){ arr.splice(i, 1); }
+      else if(action === 1){ arr.splice(i, 0, arr[i] || "e"); }
+      else if(i < arr.length - 1){ const t = arr[i]; arr[i] = arr[i+1]; arr[i+1] = t; }
+      const mutated = arr.join("");
+      if(mutated !== correctWord && mutated.length > 2) candidates.add(mutated);
+    }
+
+    return shuffle(Array.from(candidates)).slice(0, count);
+  }
+
+  // Числа с той же первой цифрой, что и правильный ответ, плюс один вариант
+  // с переставленными местами цифрами (для направления "слово -> число")
+  function pickOrdNumberDistractors(n, count){
+    const firstDigit = String(n)[0];
+    let pool = [];
+    for(let i = 1; i <= 100; i++){
+      if(i !== n && String(i)[0] === firstDigit) pool.push(i);
+    }
+    pool = shuffle(pool);
+
+    const distractors = [];
+    if(n >= 10 && n < 100){
+      const tens = Math.floor(n / 10), ones = n % 10;
+      if(tens !== ones){
+        const swapped = ones * 10 + tens;
+        if(swapped >= 1 && swapped <= 100 && swapped !== n) distractors.push(swapped);
+      }
+    }
+    pool.forEach(v => {
+      if(distractors.length < count && !distractors.includes(v)) distractors.push(v);
+    });
+    let guard = 0;
+    while(distractors.length < count && guard < 50){
+      guard++;
+      const candidate = Math.floor(Math.random() * 100) + 1;
+      if(candidate !== n && !distractors.includes(candidate)) distractors.push(candidate);
+    }
+    return shuffle(distractors).slice(0, count);
+  }
+
+  // числа для тренажёра: простые, "теенз", круглые десятки и составные (включая 38)
+  const ordNumbers = [
+    3,7,12,15,18,20,21,24,26,29,
+    30,33,35,38,40,42,45,47,50,52,
+    55,58,60,63,66,69,70,73,76,79,
+    80,82,85,88,90,92,95,97,99,100
+  ];
+
+  function buildOrdBank(){
+    return ordNumbers.map((n, i) => {
+      const correctWord = ordinalToWords(n);
+      const toWordDirection = i % 2 === 0;
+      if(toWordDirection){
+        const distractors = generateOrdWrongSpellings(correctWord, 3);
+        return {
+          id: "ord" + i,
+          category: "ord",
+          prompt: "Порядковое числительное " + n + "?",
+          sub: null,
+          options: [correctWord, ...distractors],
+          correctText: correctWord
+        };
+      } else {
+        const distractors = pickOrdNumberDistractors(n, 3);
+        return {
+          id: "ord" + i,
+          category: "ord",
+          prompt: "Что означает " + correctWord + "?",
+          sub: null,
+          options: [String(n), ...distractors.map(String)],
+          correctText: String(n)
+        };
+      }
+    });
+  }
+
   function buildBank(rawList, category){
     return rawList.map((row, i) => {
       const [prompt, sub, opts, correctIdx] = row;
@@ -590,17 +1053,63 @@
     });
   }
 
+  function buildTimeBank(rawList){
+    return rawList.map((row, i) => ({
+      id: "time" + i,
+      category: "time",
+      hour24: row.hour24,
+      minute: row.minute,
+      options: row.options,
+      correctText: row.options[0],
+      periodMatters: !!row.periodMatters,
+      periodHint: row.periodHint || null,
+      periodIcon: row.periodIcon || null
+    }));
+  }
+
   const bankPoss = buildBank(possQuestions, "poss");
   const bankNat  = buildBank(natQuestions, "nat");
+  const bankTime = buildTimeBank(timeQuestions);
+  const bankOrd  = buildOrdBank();
 
-  const CATEGORY_LABEL = { poss: "ПРИТЯЖАТЕЛЬНЫЕ", nat: "НАЦИОНАЛЬНОСТИ" };
+  const CATEGORY_LABEL = { poss: "ПРИТЯЖАТЕЛЬНЫЕ", nat: "НАЦИОНАЛЬНОСТИ", time: "ВРЕМЯ", ord: "ЧИСЛИТЕЛЬНЫЕ" };
+  const CATEGORY_TITLE = { poss: "Притяжательные", nat: "Национальности", time: "Время", ord: "Числительные" };
+
+  const MODE_BANK = {
+    poss:    () => bankPoss,
+    nat:     () => bankNat,
+    lesson1: () => bankPoss.concat(bankNat),
+    time:    () => bankTime,
+    ord:     () => bankOrd,
+    lesson2: () => bankTime.concat(bankOrd),
+    all:     () => bankPoss.concat(bankNat, bankTime, bankOrd)
+  };
+  // какие категории входят в разбивку результата для каждого составного режима
+  const MODE_BREAKDOWN_CATS = {
+    lesson1: ["poss","nat"],
+    lesson2: ["time","ord"],
+    all: ["poss","nat","time","ord"]
+  };
+
+  function modeIncludesTime(mode){
+    return mode === "time" || mode === "lesson2" || mode === "all";
+  }
 
   // ---------- STATE ----------
   let currentMode = null;
+  let pendingMode = null;
+  let pendingTimed = false;
+  let currentTimed = false;
   let queue = [];
   let idx = 0;
   let answers = []; // {q, chosenText, isCorrect}
   let answeredCurrent = false;
+  let timeDisplayMode = "clock"; // 'clock' | 'digits'
+  let timeHourFormat = "24";     // '24' | '12'
+  let timedMode = false;
+  let questionTimerId = null;
+  let questionTimeLeft = 0;
+  const QUESTION_TIME_LIMIT = 5; // seconds per question in timed training mode
 
   function shuffle(arr){
     const a = arr.slice();
@@ -649,12 +1158,127 @@
     return "Рекорд: " + b.score + "/" + b.total + " (" + pct + "%)";
   }
   function renderBests(){
-    const map = {poss:"bestPoss", nat:"bestNat", all:"bestAll"};
+    const map = {poss:"bestPoss", nat:"bestNat", lesson1:"bestLesson1", time:"bestTime", ord:"bestOrd", lesson2:"bestLesson2", all:"bestAll"};
     Object.keys(map).forEach(mode=>{
       const el = document.getElementById(map[mode]);
       const b = getBest(mode);
       el.textContent = b ? formatBest(b) : "Ещё не пройдено";
     });
+  }
+
+  function updateCounts(){
+    document.querySelectorAll(".mode-card").forEach(card=>{
+      const mode = card.dataset.mode;
+      const getBank = MODE_BANK[mode];
+      if(!getBank) return;
+      const countEl = card.querySelector(".mc-count");
+      if(countEl) countEl.textContent = getBank().length;
+    });
+    const tag = document.getElementById("mastheadTag");
+    if(tag) tag.textContent = MODE_BANK.all().length + " вопросов";
+  }
+
+  // ---------- TIME RENDERING HELPERS ----------
+  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+
+  function digital24(hour24, minute){
+    return pad2(hour24) + ":" + pad2(minute);
+  }
+  function digital12(hour24, minute, showPeriod){
+    let h = hour24 % 12;
+    if(h === 0) h = 12;
+    const suffix = hour24 < 12 ? "AM" : "PM";
+    let s = h + ":" + pad2(minute);
+    if(showPeriod) s += " " + suffix;
+    return s;
+  }
+
+  // угол часовой/минутной стрелки в градусах (0 = 12 часов, по часовой стрелке)
+  function computeClockAngles(hour24, minute){
+    const hour12 = hour24 % 12;
+    return {
+      hourAngle: hour12 * 30 + minute * 0.5,
+      minuteAngle: minute * 6
+    };
+  }
+
+  function clockSVG(hour24, minute, startHour24, startMinute){
+    const cx = 60, cy = 60, r = 52;
+    const hasStart = (startHour24 !== undefined && startHour24 !== null);
+    const initial = hasStart ? computeClockAngles(startHour24, startMinute) : computeClockAngles(hour24, minute);
+
+    let ticks = "";
+    for(let i=0;i<12;i++){
+      const angle = i*30;
+      const rad = (angle - 90) * Math.PI / 180;
+      const outer = { x: cx + (r-4) * Math.cos(rad), y: cy + (r-4) * Math.sin(rad) };
+      const inner = { x: cx + (r-12) * Math.cos(rad), y: cy + (r-12) * Math.sin(rad) };
+      ticks += '<line x1="'+inner.x.toFixed(1)+'" y1="'+inner.y.toFixed(1)+'" x2="'+outer.x.toFixed(1)+'" y2="'+outer.y.toFixed(1)+'" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round"/>';
+    }
+
+    return '<svg viewBox="0 0 120 120" width="112" height="112" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="var(--paper)" stroke="var(--line)" stroke-width="2"/>'
+      + ticks
+      + '<line id="clockHourHand" x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(cy-26)+'" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" style="transform-origin:'+cx+'px '+cy+'px; transform:rotate('+initial.hourAngle+'deg);"/>'
+      + '<line id="clockMinHand" x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(cy-40)+'" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" style="transform-origin:'+cx+'px '+cy+'px; transform:rotate('+initial.minuteAngle+'deg);"/>'
+      + '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--ink)"/>'
+      + '</svg>';
+  }
+
+  // запускает анимацию поворота стрелок от prevQ к q (только для режима "циферблат")
+  function triggerClockSpin(prevQ, q){
+    const hourEl = document.getElementById("clockHourHand");
+    const minEl = document.getElementById("clockMinHand");
+    if(!hourEl || !minEl) return;
+
+    const startAngles = computeClockAngles(prevQ.hour24, prevQ.minute);
+    const targetAngles = computeClockAngles(q.hour24, q.minute);
+
+    // стрелки всегда крутятся вперёд (по часовой), даже если новое время
+    // формально "раньше" — это просто эффект перехода между вопросами
+    function forwardTarget(start, targetBase){
+      let t = targetBase;
+      while(t <= start) t += 360;
+      return t;
+    }
+
+    const hourTarget = forwardTarget(startAngles.hourAngle, targetAngles.hourAngle);
+    const minTarget = forwardTarget(startAngles.minuteAngle, targetAngles.minuteAngle);
+
+    // зафиксировать стартовое положение (уже отрисовано без transition), затем
+    // на следующем кадре включить переход и задать целевой угол
+    void hourEl.getBoundingClientRect();
+    void minEl.getBoundingClientRect();
+
+    requestAnimationFrame(()=>{
+      hourEl.style.transition = "transform .6s cubic-bezier(.5,0,.25,1)";
+      minEl.style.transition = "transform .5s cubic-bezier(.5,0,.25,1)";
+      hourEl.style.transform = "rotate(" + hourTarget + "deg)";
+      minEl.style.transform = "rotate(" + minTarget + "deg)";
+    });
+  }
+
+  function timeGivenHTML(q, startHour24, startMinute){
+    let html = '<div class="time-given">';
+    if(timeDisplayMode === "clock"){
+      html += clockSVG(q.hour24, q.minute, startHour24, startMinute);
+      if(q.periodMatters){
+        html += '<div class="period-hint">' + (q.periodIcon||"") + ' ' + q.periodHint + '</div>';
+      }
+    } else {
+      const str = timeHourFormat === "24"
+        ? digital24(q.hour24, q.minute)
+        : digital12(q.hour24, q.minute, q.periodMatters);
+      html += '<span class="time-digits">' + str + '</span>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function timeReviewLabel(q){
+    let s = digital24(q.hour24, q.minute);
+    if(q.periodMatters) s += " (" + q.periodHint + ")";
+    return s;
   }
 
   // ---------- SCREENS ----------
@@ -669,8 +1293,15 @@
   }
 
   document.querySelectorAll(".mode-card").forEach(btn=>{
-    btn.addEventListener("click", ()=> startQuiz(btn.dataset.mode));
+    btn.addEventListener("click", ()=> requestStartQuiz(btn.dataset.mode, false));
   });
+  document.querySelectorAll(".timer-btn").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      requestStartQuiz(btn.dataset.mode, true);
+    });
+  });
+
   const confirmOverlay = document.getElementById("confirmOverlay");
   document.getElementById("quitBtn").addEventListener("click", ()=>{
     confirmOverlay.classList.remove("hidden");
@@ -679,6 +1310,7 @@
     confirmOverlay.classList.add("hidden");
   });
   document.getElementById("modalConfirm").addEventListener("click", ()=>{
+    clearQuestionTimer();
     confirmOverlay.classList.add("hidden");
     showScreen("start");
     renderBests();
@@ -687,18 +1319,92 @@
     if(e.target === confirmOverlay) confirmOverlay.classList.add("hidden");
   });
   document.getElementById("backBtn").addEventListener("click", ()=>{
+    clearQuestionTimer();
     showScreen("start");
     renderBests();
   });
-  document.getElementById("retryBtn").addEventListener("click", ()=> startQuiz(currentMode));
+  document.getElementById("retryBtn").addEventListener("click", ()=> requestStartQuiz(currentMode, currentTimed));
 
-  function startQuiz(mode){
+  // ---------- TIME SETTINGS MODAL ----------
+  const timeSettingsOverlay = document.getElementById("timeSettingsOverlay");
+  const displaySegmented = document.getElementById("displaySegmented");
+  const formatSegmented = document.getElementById("formatSegmented");
+
+  function setActive(container, value){
+    container.querySelectorAll(".seg-btn").forEach(b=>{
+      b.classList.toggle("active", b.dataset.value === value);
+    });
+  }
+  displaySegmented.querySelectorAll(".seg-btn").forEach(b=>{
+    b.addEventListener("click", ()=>{ timeDisplayMode = b.dataset.value; setActive(displaySegmented, timeDisplayMode); });
+  });
+  formatSegmented.querySelectorAll(".seg-btn").forEach(b=>{
+    b.addEventListener("click", ()=>{ timeHourFormat = b.dataset.value; setActive(formatSegmented, timeHourFormat); });
+  });
+
+  document.getElementById("timeSettingsCancel").addEventListener("click", ()=>{
+    timeSettingsOverlay.classList.add("hidden");
+    pendingMode = null;
+  });
+  document.getElementById("timeSettingsStart").addEventListener("click", ()=>{
+    timeSettingsOverlay.classList.add("hidden");
+    launchWithCountdown(pendingMode, pendingTimed);
+  });
+
+  function requestStartQuiz(mode, timed){
+    pendingTimed = !!timed;
+    if(modeIncludesTime(mode)){
+      pendingMode = mode;
+      // по умолчанию: циферблат + 24-часовой формат
+      timeDisplayMode = "clock";
+      timeHourFormat = "24";
+      setActive(displaySegmented, timeDisplayMode);
+      setActive(formatSegmented, timeHourFormat);
+      timeSettingsOverlay.classList.remove("hidden");
+    } else {
+      launchWithCountdown(mode, pendingTimed);
+    }
+  }
+
+  function launchWithCountdown(mode, timed){
+    if(timed){
+      showCountdownThenStart(mode);
+    } else {
+      actuallyStartQuiz(mode, false);
+    }
+  }
+
+  function showCountdownThenStart(mode){
+    const overlay = document.getElementById("countdownOverlay");
+    const numEl = document.getElementById("countdownNumber");
+    const steps = ["3","2","1","Поехали!"];
+    let i = 0;
+    overlay.classList.remove("hidden");
+
+    function tick(){
+      numEl.textContent = steps[i];
+      numEl.classList.toggle("go", steps[i] === "Поехали!");
+      numEl.classList.remove("pulse");
+      void numEl.offsetWidth; // restart animation
+      numEl.classList.add("pulse");
+      i++;
+      if(i < steps.length){
+        setTimeout(tick, 700);
+      } else {
+        setTimeout(()=>{
+          overlay.classList.add("hidden");
+          actuallyStartQuiz(mode, true);
+        }, 500);
+      }
+    }
+    tick();
+  }
+
+  function actuallyStartQuiz(mode, timed){
     currentMode = mode;
-    let bank;
-    if(mode === "poss") bank = bankPoss;
-    else if(mode === "nat") bank = bankNat;
-    else bank = bankPoss.concat(bankNat);
-
+    currentTimed = !!timed;
+    timedMode = currentTimed;
+    const bank = MODE_BANK[mode]();
     queue = shuffle(bank).map(q => ({...q, shuffledOptions: shuffle(q.options)}));
     idx = 0;
     answers = [];
@@ -715,16 +1421,31 @@
     document.getElementById("progressFill").style.width = ((idx)/total*100) + "%";
     document.getElementById("categoryLabel").textContent = CATEGORY_LABEL[q.category];
 
+    // если и текущий, и предыдущий вопрос — про время, и включён циферблат,
+    // стрелки не просто перерисуются на новом месте, а "доедут" туда анимацией
+    let clockSpinFrom = null;
+    if(q.category === "time" && timeDisplayMode === "clock" && idx > 0 && queue[idx-1].category === "time"){
+      clockSpinFrom = queue[idx-1];
+    }
+
     let qText;
     if(q.category === "poss"){
       qText = q.prompt.replace("___", '<span class="gap" id="answerSlot">___</span>');
       if(q.sub){
         qText += "  <span style='color:var(--ink-soft); font-size:16px;'>" + q.sub + "</span>";
       }
+    } else if(q.category === "time"){
+      qText = timeGivenHTML(q, clockSpinFrom ? clockSpinFrom.hour24 : null, clockSpinFrom ? clockSpinFrom.minute : null)
+        + '<div class="time-question-label">Как сказать это время?</div>'
+        + '<div class="time-answer-line">Ответ: <span class="gap" id="answerSlot">___</span></div>';
     } else {
       qText = q.prompt + ' <span class="answer-line">— <span class="gap" id="answerSlot">___</span></span>';
     }
     document.getElementById("questionText").innerHTML = qText;
+
+    if(clockSpinFrom){
+      triggerClockSpin(clockSpinFrom, q);
+    }
 
     const grid = document.getElementById("optionsGrid");
     grid.innerHTML = "";
@@ -737,11 +1458,85 @@
     });
 
     document.getElementById("cardFooter").innerHTML = "";
+
+    startQuestionTimer();
+  }
+
+  function clearQuestionTimer(){
+    if(questionTimerId){
+      clearInterval(questionTimerId);
+      questionTimerId = null;
+    }
+  }
+
+  function startQuestionTimer(){
+    clearQuestionTimer();
+    const wrap = document.getElementById("qTimerWrap");
+    if(!timedMode){
+      wrap.classList.add("hidden");
+      return;
+    }
+    const fill = document.getElementById("qTimerFill");
+    const numEl = document.getElementById("qTimerNum");
+    wrap.classList.remove("hidden");
+    wrap.classList.remove("urgent");
+    fill.style.width = "100%";
+    questionTimeLeft = QUESTION_TIME_LIMIT;
+    numEl.textContent = questionTimeLeft;
+
+    const totalMs = QUESTION_TIME_LIMIT * 1000;
+    const startTs = Date.now();
+    questionTimerId = setInterval(()=>{
+      const elapsed = Date.now() - startTs;
+      const remainingMs = Math.max(0, totalMs - elapsed);
+      const remainingSec = Math.ceil(remainingMs / 1000);
+      fill.style.width = (remainingMs / totalMs * 100) + "%";
+      if(remainingSec !== questionTimeLeft){
+        questionTimeLeft = remainingSec;
+        numEl.textContent = questionTimeLeft;
+      }
+      if(remainingMs <= 1500){
+        wrap.classList.add("urgent");
+      }
+      if(remainingMs <= 0){
+        clearQuestionTimer();
+        handleTimeExpired();
+      }
+    }, 50);
+  }
+
+  function handleTimeExpired(){
+    if(answeredCurrent) return;
+    answeredCurrent = true;
+    const q = queue[idx];
+
+    document.querySelectorAll("#optionsGrid .option").forEach(b=>{
+      b.disabled = true;
+      if(b.textContent === q.correctText){
+        b.classList.add("correct");
+      }
+    });
+
+    answers.push({ q, chosenText: null, isCorrect: false, timedOut: true });
+
+    const footer = document.getElementById("cardFooter");
+    footer.innerHTML = '<span style="color:var(--bad); font-size:14px; font-weight:600; margin-right:auto; align-self:center;">Время вышло</span>';
+
+    const isLast = idx === queue.length - 1;
+    setTimeout(()=>{
+      if(isLast){
+        finishQuiz();
+      } else {
+        idx++;
+        renderQuestion();
+      }
+    }, 1100);
   }
 
   function selectOption(chosenText, btnEl){
     if(answeredCurrent) return;
     answeredCurrent = true;
+    clearQuestionTimer();
     const q = queue[idx];
     const isCorrect = chosenText === q.correctText;
 
@@ -781,6 +1576,8 @@
   }
 
   function finishQuiz(){
+    clearQuestionTimer();
+    document.getElementById("qTimerWrap").classList.add("hidden");
     document.getElementById("progressFill").style.width = "100%";
     const total = answers.length;
     const score = answers.filter(a=>a.isCorrect).length;
@@ -792,19 +1589,21 @@
 
     const breakdownRow = document.getElementById("breakdownRow");
     breakdownRow.innerHTML = "";
-    if(currentMode === "all"){
-      ["poss","nat"].forEach(cat=>{
+    const breakdownCats = MODE_BREAKDOWN_CATS[currentMode];
+    if(breakdownCats){
+      breakdownCats.forEach(cat=>{
         const catAnswers = answers.filter(a=>a.q.category===cat);
+        if(catAnswers.length === 0) return;
         const catScore = catAnswers.filter(a=>a.isCorrect).length;
         const div = document.createElement("div");
         div.className = "breakdown-item";
-        div.innerHTML = '<div class="num">'+catScore+'/'+catAnswers.length+'</div><div class="lbl">'+(cat==="poss"?"Притяжательные":"Национальности")+'</div>';
+        div.innerHTML = '<div class="num">'+catScore+'/'+catAnswers.length+'</div><div class="lbl">'+CATEGORY_TITLE[cat]+'</div>';
         breakdownRow.appendChild(div);
       });
     } else {
       const div = document.createElement("div");
       div.className = "breakdown-item";
-      div.innerHTML = '<div class="num">'+score+'/'+total+'</div><div class="lbl">'+(currentMode==="poss"?"Притяжательные":"Национальности")+'</div>';
+      div.innerHTML = '<div class="num">'+score+'/'+total+'</div><div class="lbl">'+CATEGORY_TITLE[currentMode]+'</div>';
       breakdownRow.appendChild(div);
     }
 
@@ -822,10 +1621,18 @@
       wrong.forEach(a=>{
         const div = document.createElement("div");
         div.className = "review-item";
-        const promptClean = a.q.prompt.replace("___","___");
+        let promptClean;
+        if(a.q.category === "time"){
+          promptClean = timeReviewLabel(a.q);
+        } else {
+          promptClean = a.q.prompt.replace("___","___") + (a.q.sub ? ' <span style="color:var(--ink-soft)">'+a.q.sub+'</span>' : '');
+        }
+        const answerPart = a.timedOut
+          ? "Время вышло"
+          : "Твой ответ: <s>" + a.chosenText + "</s>";
         div.innerHTML =
-          '<div class="rq">'+promptClean+(a.q.sub ? ' <span style="color:var(--ink-soft)">'+a.q.sub+'</span>' : '')+'</div>'+
-          '<div class="ra">Твой ответ: <s>'+a.chosenText+'</s> · Правильно: <b>'+a.q.correctText+'</b></div>';
+          '<div class="rq">'+promptClean+'</div>'+
+          '<div class="ra">'+answerPart+' · Правильно: <b>'+a.q.correctText+'</b></div>';
         reviewList.appendChild(div);
       });
     }
@@ -834,6 +1641,7 @@
   }
 
   renderBests();
+  updateCounts();
 })();
 </script>
 </body>
