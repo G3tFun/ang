@@ -20,6 +20,10 @@
     --good-soft: #DCEAE7;
     --bad: #B5502F;
     --bad-soft: #F3E1D8;
+    --orange: #C97729;
+    --orange-soft: #F3E4D2;
+    --yellow: #9C7A14;
+    --yellow-soft: #F5EBC3;
     --shadow: rgba(33,30,44,0.10);
     --font-display: "Fraunces", Georgia, "Times New Roman", serif;
     --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -37,6 +41,10 @@
       --good-soft: #23383A;
       --bad: #E08B67;
       --bad-soft: #3B2A24;
+      --orange: #E0A05D;
+      --orange-soft: #3B2E1C;
+      --yellow: #E4C05B;
+      --yellow-soft: #3A3220;
       --shadow: rgba(0,0,0,0.35);
     }
   }
@@ -52,6 +60,10 @@
     --good-soft: #23383A;
     --bad: #E08B67;
     --bad-soft: #3B2A24;
+    --orange: #E0A05D;
+    --orange-soft: #3B2E1C;
+    --yellow: #E4C05B;
+    --yellow-soft: #3A3220;
     --shadow: rgba(0,0,0,0.35);
   }
 
@@ -94,6 +106,16 @@
     color:var(--ink-soft);
     white-space:nowrap;
     margin-left:16px;
+  }
+  .cookie-warning{
+    background:var(--orange-soft);
+    color:var(--orange);
+    border:1px solid var(--orange);
+    border-radius:9px;
+    padding:12px 16px;
+    font-size:13px;
+    line-height:1.4;
+    margin:-20px 0 28px;
   }
 
   /* ---------- Start screen ---------- */
@@ -188,6 +210,33 @@
     color:var(--ink-soft);
     margin-top:2px;
   }
+  .mc-passed-row{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:5px;
+  }
+  .status-pill{
+    font-size:11px;
+    font-weight:600;
+    padding:2px 8px;
+    border-radius:5px;
+    line-height:1.5;
+    border:1px solid transparent;
+  }
+  /* обычный режим: серый — не проходили, белый — проходили но не идеально, зелёный — идеально */
+  .status-pill.n-none{ color:var(--ink-soft); background:var(--paper); border-color:var(--line); }
+  .status-pill.n-partial{ color:var(--ink); background:var(--paper-raised); border-color:var(--line); }
+  .status-pill.n-full{ color:var(--good); background:var(--good-soft); }
+  /* режим на время: серый — не проходили, жёлтый — проходили но не идеально, оранжевый — идеально */
+  .status-pill.t-none{ color:var(--ink-soft); background:var(--paper); border-color:var(--line); }
+  .status-pill.t-partial{ color:var(--yellow); background:var(--yellow-soft); }
+  .status-pill.t-full{ color:var(--orange); background:var(--orange-soft); }
+  .mode-card-all .status-pill.n-none, .mode-card-all .status-pill.t-none{ color:rgba(251,250,253,0.55); background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14); }
+  .mode-card-all .status-pill.n-partial{ color:#FBFAFD; background:rgba(255,255,255,0.14); border-color:rgba(255,255,255,0.2); }
+  .mode-card-all .status-pill.n-full{ color:#8FD9CB; background:rgba(143,217,203,0.18); }
+  .mode-card-all .status-pill.t-partial{ color:#F0DD8A; background:rgba(240,221,138,0.18); }
+  .mode-card-all .status-pill.t-full{ color:#E7B27A; background:rgba(231,178,122,0.18); }
 
   /* ---------- Quiz screen ---------- */
   .quiz-head{
@@ -608,9 +657,13 @@
     <span class="tag" id="mastheadTag">100 вопросов</span>
   </div>
 
+  <div id="cookieWarning" class="cookie-warning hidden">
+    ⚠️ В этом браузере отключены cookies — рекорды и прогресс не будут сохраняться между визитами.
+  </div>
+
   <!-- START SCREEN -->
   <div id="startScreen">
-    <p class="intro-copy">Тренажёр перед контрольной. Темы собраны в два урока — тренируй раздел, урок целиком, или пройди вообще всё.</p>
+    <p class="intro-copy">Тренажёр перед контрольной. Темы собраны в уроки — тренируй раздел, урок целиком, или пройди вообще всё.</p>
 
     <h2 class="lesson-title">Урок 1</h2>
     <p class="lesson-sub">местоимения и национальности</p>
@@ -621,6 +674,7 @@
             <span class="mc-title">Притяжательные</span>
             <span class="mc-sub">my / mine, her / hers, their / theirs…</span>
             <span class="mc-best" id="bestPoss"></span>
+            <span class="mc-passed-row" id="passRow_poss"></span>
           </span>
           <span class="mc-count">30</span>
         </button>
@@ -632,6 +686,7 @@
             <span class="mc-title">Национальности</span>
             <span class="mc-sub">страна ⇄ житель, в обе стороны</span>
             <span class="mc-best" id="bestNat"></span>
+            <span class="mc-passed-row" id="passRow_nat"></span>
           </span>
           <span class="mc-count">30</span>
         </button>
@@ -643,6 +698,7 @@
             <span class="mc-title">Урок 1 целиком</span>
             <span class="mc-sub">притяжательные + национальности, вперемешку</span>
             <span class="mc-best" id="bestLesson1"></span>
+            <span class="mc-passed-row" id="passRow_lesson1"></span>
           </span>
           <span class="mc-count">60</span>
         </button>
@@ -659,6 +715,7 @@
             <span class="mc-title">Время</span>
             <span class="mc-sub">6:30 → half past six</span>
             <span class="mc-best" id="bestTime"></span>
+            <span class="mc-passed-row" id="passRow_time"></span>
           </span>
           <span class="mc-count">20</span>
         </button>
@@ -670,6 +727,7 @@
             <span class="mc-title">Порядковые числительные</span>
             <span class="mc-sub">38 → thirty-eighth, и в обратную сторону</span>
             <span class="mc-best" id="bestOrd"></span>
+            <span class="mc-passed-row" id="passRow_ord"></span>
           </span>
           <span class="mc-count">20</span>
         </button>
@@ -681,10 +739,26 @@
             <span class="mc-title">Урок 2 целиком</span>
             <span class="mc-sub">время + числительные, вперемешку</span>
             <span class="mc-best" id="bestLesson2"></span>
+            <span class="mc-passed-row" id="passRow_lesson2"></span>
           </span>
           <span class="mc-count">40</span>
         </button>
         <button class="timer-btn" data-mode="lesson2" title="Тренировка на время: 5 сек на ответ">⏱</button>
+      </div>
+    </div>
+
+    <h2 class="lesson-title">Урок 3</h2>
+    <p class="lesson-sub">сленг и живые слова</p>
+    <div class="mode-list">
+      <div class="mode-row">
+        <button class="mode-card mode-card-combo" id="slangStartBtn">
+          <span class="mc-left">
+            <span class="mc-title">Сленг и живые слова</span>
+            <span class="mc-sub">сначала объяснение, потом проверка — по 5 слов за раз</span>
+            <span class="mc-best" id="bestSlang"></span>
+          </span>
+          <span class="mc-count">50</span>
+        </button>
       </div>
     </div>
 
@@ -696,12 +770,29 @@
             <span class="mc-title">Все темы</span>
             <span class="mc-sub">абсолютно все вопросы, вперемешку</span>
             <span class="mc-best" id="bestAll"></span>
+            <span class="mc-passed-row" id="passRow_all"></span>
           </span>
           <span class="mc-count">100</span>
         </button>
         <button class="timer-btn timer-btn-all" data-mode="all" title="Тренировка на время: 5 сек на ответ">⏱</button>
       </div>
     </div>
+  </div>
+
+  <!-- SLANG LEARN SCREEN -->
+  <div id="slangLearnScreen" class="hidden">
+    <div class="quiz-head">
+      <div class="progress-track"><div class="progress-fill" id="slangProgressFill"></div></div>
+      <div class="progress-label" id="slangProgressLabel">Группа 1 / 10</div>
+    </div>
+    <div class="card">
+      <div class="category-label">СЛЕНГ — ИЗУЧИ ПЕРЕД ПРОВЕРКОЙ</div>
+      <div id="slangWordList" style="display:flex;flex-direction:column;gap:12px;"></div>
+      <div class="card-footer">
+        <button class="next-btn" id="slangToQuizBtn">Проверить себя</button>
+      </div>
+    </div>
+    <div class="quit-row"><button class="quit-link" id="slangQuitBtn">Вернуться к выбору</button></div>
   </div>
 
   <!-- QUIZ SCREEN -->
@@ -1072,8 +1163,8 @@
   const bankTime = buildTimeBank(timeQuestions);
   const bankOrd  = buildOrdBank();
 
-  const CATEGORY_LABEL = { poss: "ПРИТЯЖАТЕЛЬНЫЕ", nat: "НАЦИОНАЛЬНОСТИ", time: "ВРЕМЯ", ord: "ЧИСЛИТЕЛЬНЫЕ" };
-  const CATEGORY_TITLE = { poss: "Притяжательные", nat: "Национальности", time: "Время", ord: "Числительные" };
+  const CATEGORY_LABEL = { poss: "ПРИТЯЖАТЕЛЬНЫЕ", nat: "НАЦИОНАЛЬНОСТИ", time: "ВРЕМЯ", ord: "ЧИСЛИТЕЛЬНЫЕ", slang: "СЛЕНГ" };
+  const CATEGORY_TITLE = { poss: "Притяжательные", nat: "Национальности", time: "Время", ord: "Числительные", slang: "Сленг" };
 
   const MODE_BANK = {
     poss:    () => bankPoss,
@@ -1093,6 +1184,172 @@
 
   function modeIncludesTime(mode){
     return mode === "time" || mode === "lesson2" || mode === "all";
+  }
+
+  // ---------- SLANG DATA ----------
+  const slangWordsRaw = [
+    ["lit","потрясающий, огонь (о вечеринке или событии)"],
+    ["salty","обиженный, раздражённый по мелочи"],
+    ["extra","слишком драматичный, наигранный"],
+    ["ghost","резко пропасть, перестать отвечать"],
+    ["slay","сделать что-то великолепно, «зажечь»"],
+    ["basic","слишком обычный, без своей изюминки"],
+    ["vibe","атмосфера, настроение"],
+    ["flex","хвастаться, выпендриваться"],
+    ["sus","подозрительный, странный"],
+    ["cap","враньё, неправда"],
+    ["bet","договорились, хорошо"],
+    ["ship","поддерживать пару, «шипперить»"],
+    ["simp","тот, кто слишком старается угодить"],
+    ["yeet","резко бросить / возглас восторга"],
+    ["cringe","испытывать неловкость за кого-то"],
+    ["drip","стильный образ, крутая одежда"],
+    ["gucci","всё отлично, окей"],
+    ["savage","дерзкий, беспощадно крутой"],
+    ["clutch","спасти положение в решающий момент"],
+    ["finna","собираюсь, вот-вот сделаю"],
+    ["lowkey","слегка, немного, по-тихому"],
+    ["highkey","открыто, явно"],
+    ["tea","сплетни, горячие новости"],
+    ["shade","завуалированное оскорбление"],
+    ["stan","быть ярым фанатом"],
+    ["woke","осознанный в социальных вопросах"],
+    ["mood","точно про меня, настроение"],
+    ["fire","очень крутой, огонь"],
+    ["dead","умираю (от смеха), очень смешно"],
+    ["thirsty","отчаянно ищущий внимания"],
+    ["snatched","идеально выглядящий"],
+    ["bougie","строящий из себя богача"],
+    ["shook","в шоке, потрясён"],
+    ["bail","резко уйти, слинять"],
+    ["chill","расслабленный, спокойный"],
+    ["hangry","злой от голода"],
+    ["janky","халтурный, ненадёжный"],
+    ["legit","настоящий, законный"],
+    ["lame","скучный, отстойный"],
+    ["yolo","живём один раз (оправдание риска)"],
+    ["glow up","сильно похорошеть, преобразиться"],
+    ["clap back","резко ответить на критику"],
+    ["binge","смотреть/делать без остановки"],
+    ["petty","мелочный, обидчивый по пустякам"],
+    ["reckon","думать, полагать (брит.)"],
+    ["cheeky","дерзко-игривый (брит.)"],
+    ["knackered","вымотанный, уставший (брит.)"],
+    ["gutted","очень расстроенный (брит.)"],
+    ["mate","приятель, друг (брит.)"],
+    ["sorted","всё улажено, в порядке (брит.)"]
+  ];
+
+  function chunkArray(arr, size){
+    const out = [];
+    for(let i=0; i<arr.length; i+=size) out.push(arr.slice(i, i+size));
+    return out;
+  }
+  const slangGroups = chunkArray(slangWordsRaw, 5);
+
+  let slangGroupIndex = 0;
+  let lastSlangPassed = false;
+
+  function buildSlangGroupBank(gi){
+    const group = slangGroups[gi];
+    return group.map((pair, i) => {
+      const [en, ru] = pair;
+      const others = group.filter((_, j) => j !== i).map(p => p[1]);
+      const distractors = shuffle(others).slice(0, 3);
+      return {
+        id: "slang" + gi + "_" + i,
+        category: "slang",
+        prompt: "Переведи слово: <b>" + en + "</b>",
+        sub: null,
+        options: shuffle([ru, ...distractors]),
+        correctText: ru
+      };
+    });
+  }
+
+  function getSlangProgress(){
+    const v = getCookie("slangProgress");
+    const n = parseInt(v, 10);
+    return isNaN(n) ? 0 : n;
+  }
+  function setSlangProgress(n){
+    const cur = getSlangProgress();
+    if(n > cur) setCookie("slangProgress", String(n), 365);
+  }
+  function updateSlangProgressLabel(){
+    const el = document.getElementById("bestSlang");
+    if(!el) return;
+    const done = getSlangProgress();
+    el.textContent = done >= slangGroups.length ? "Все " + slangGroups.length + " групп пройдены"
+      : (done > 0 ? "Пройдено групп: " + done + "/" + slangGroups.length : "Ещё не начато");
+  }
+
+  function showSlangLearn(gi){
+    slangGroupIndex = gi;
+    showScreen("slangLearn");
+    document.getElementById("slangProgressLabel").textContent = "Группа " + (gi+1) + " / " + slangGroups.length;
+    document.getElementById("slangProgressFill").style.width = (gi/slangGroups.length*100) + "%";
+    const list = document.getElementById("slangWordList");
+    list.innerHTML = "";
+    slangGroups[gi].forEach(pair=>{
+      const div = document.createElement("div");
+      div.style.cssText = "padding:12px 14px;background:var(--paper);border:1px solid var(--line);border-radius:9px;";
+      div.innerHTML = '<div style="font-family:var(--font-display);font-weight:600;font-size:17px;">'+pair[0]+'</div>'
+        + '<div style="color:var(--ink-soft);font-size:14px;margin-top:3px;">'+pair[1]+'</div>';
+      list.appendChild(div);
+    });
+  }
+
+  function startSlangQuiz(gi){
+    currentMode = "slangGroup" + gi;
+    currentTimed = false;
+    timedMode = false;
+    queue = shuffle(buildSlangGroupBank(gi));
+    idx = 0;
+    answers = [];
+    showScreen("quiz");
+    renderQuestion();
+  }
+
+  function finishSlangGroup(score, total){
+    lastSlangPassed = (score === total);
+    showScreen("result");
+    document.getElementById("resultScore").textContent = score + "/" + total;
+    document.getElementById("resultPercent").textContent = lastSlangPassed
+      ? "Группа пройдена!"
+      : Math.round(score/total*100) + "% правильных — нужно " + total + "/" + total;
+    document.getElementById("resultBest").classList.add("hidden");
+
+    const breakdownRow = document.getElementById("breakdownRow");
+    breakdownRow.innerHTML = '<div class="breakdown-item"><div class="num">'+score+'/'+total+'</div>'
+      + '<div class="lbl">Группа '+(slangGroupIndex+1)+' из '+slangGroups.length+'</div></div>';
+
+    const wrong = answers.filter(a=>!a.isCorrect);
+    const reviewList = document.getElementById("reviewList");
+    const reviewTitle = document.getElementById("reviewTitle");
+    const allCorrectMsg = document.getElementById("allCorrectMsg");
+    reviewList.innerHTML = "";
+    if(wrong.length === 0){
+      reviewTitle.classList.add("hidden");
+      allCorrectMsg.classList.remove("hidden");
+    } else {
+      reviewTitle.classList.remove("hidden");
+      allCorrectMsg.classList.add("hidden");
+      wrong.forEach(a=>{
+        const div = document.createElement("div");
+        div.className = "review-item";
+        div.innerHTML = '<div class="rq">'+a.q.prompt+'</div>'
+          + '<div class="ra">Твой ответ: <s>'+(a.chosenText||"—")+'</s> · Правильно: <b>'+a.q.correctText+'</b></div>';
+        reviewList.appendChild(div);
+      });
+    }
+
+    const retryBtn = document.getElementById("retryBtn");
+    if(lastSlangPassed){
+      retryBtn.textContent = (slangGroupIndex === slangGroups.length-1) ? "Готово" : "Следующая группа";
+    } else {
+      retryBtn.textContent = "Повторить слова и попробовать снова";
+    }
   }
 
   // ---------- STATE ----------
@@ -1139,6 +1396,18 @@
     }catch(e){ /* ignore */ }
     return null;
   }
+
+  // пробуем поставить тестовую cookie и сразу её прочитать — если браузер
+  // (приватный режим, настройки блокировки и т.п.) её не сохранил, значит
+  // и весь прогресс/рекорды сохраняться не будут — предупреждаем об этом
+  function checkCookieSupport(){
+    setCookie("cookieTest", "1", 1);
+    const works = getCookie("cookieTest") === "1";
+    if(!works){
+      const warn = document.getElementById("cookieWarning");
+      if(warn) warn.classList.remove("hidden");
+    }
+  }
   function bestKey(mode){ return "quizBest_" + mode; }
   function getBest(mode){
     const v = getCookie(bestKey(mode));
@@ -1157,6 +1426,38 @@
     const pct = Math.round(b.score / b.total * 100);
     return "Рекорд: " + b.score + "/" + b.total + " (" + pct + "%)";
   }
+
+  // "пройдено идеально" (100%) и "проходили хотя бы раз" отслеживаются
+  // отдельно для обычного прохождения и для режима на время — вместе они
+  // дают статус: не проходили / проходили не идеально / идеально
+  function passKey(mode, timed){ return "quizPass_" + (timed ? "t_" : "n_") + mode; }
+  function getPassed(mode, timed){ return getCookie(passKey(mode, timed)) === "1"; }
+  function setPassed(mode, timed){ setCookie(passKey(mode, timed), "1", 365); }
+
+  function attemptKey(mode, timed){ return "quizAttempt_" + (timed ? "t_" : "n_") + mode; }
+  function getAttempted(mode, timed){ return getCookie(attemptKey(mode, timed)) === "1"; }
+  function setAttempted(mode, timed){ setCookie(attemptKey(mode, timed), "1", 365); }
+
+  function getStatus(mode, timed){
+    if(getPassed(mode, timed)) return "full";
+    if(getAttempted(mode, timed)) return "partial";
+    return "none";
+  }
+
+  function renderStatusBadges(){
+    const modes = ["poss","nat","lesson1","time","ord","lesson2","all"];
+    modes.forEach(mode=>{
+      const el = document.getElementById("passRow_" + mode);
+      if(!el) return;
+      const ns = getStatus(mode, false);
+      const ts = getStatus(mode, true);
+      const nIcon = ns === "full" ? "✓ " : (ns === "partial" ? "• " : "— ");
+      const tIcon = ts === "full" ? "✓ " : (ts === "partial" ? "• " : "— ");
+      el.innerHTML = '<span class="status-pill n-'+ns+'">'+nIcon+'обычный</span>'
+        + '<span class="status-pill t-'+ts+'">'+tIcon+'на время</span>';
+    });
+  }
+
   function renderBests(){
     const map = {poss:"bestPoss", nat:"bestNat", lesson1:"bestLesson1", time:"bestTime", ord:"bestOrd", lesson2:"bestLesson2", all:"bestAll"};
     Object.keys(map).forEach(mode=>{
@@ -1164,6 +1465,8 @@
       const b = getBest(mode);
       el.textContent = b ? formatBest(b) : "Ещё не пройдено";
     });
+    renderStatusBadges();
+    updateSlangProgressLabel();
   }
 
   function updateCounts(){
@@ -1285,14 +1588,16 @@
   const startScreen = document.getElementById("startScreen");
   const quizScreen = document.getElementById("quizScreen");
   const resultScreen = document.getElementById("resultScreen");
+  const slangLearnScreen = document.getElementById("slangLearnScreen");
 
   function showScreen(name){
     startScreen.classList.toggle("hidden", name !== "start");
     quizScreen.classList.toggle("hidden", name !== "quiz");
     resultScreen.classList.toggle("hidden", name !== "result");
+    slangLearnScreen.classList.toggle("hidden", name !== "slangLearn");
   }
 
-  document.querySelectorAll(".mode-card").forEach(btn=>{
+  document.querySelectorAll(".mode-card[data-mode]").forEach(btn=>{
     btn.addEventListener("click", ()=> requestStartQuiz(btn.dataset.mode, false));
   });
   document.querySelectorAll(".timer-btn").forEach(btn=>{
@@ -1300,6 +1605,16 @@
       e.stopPropagation();
       requestStartQuiz(btn.dataset.mode, true);
     });
+  });
+
+  // ---------- SLANG UI WIRING ----------
+  document.getElementById("slangStartBtn").addEventListener("click", ()=>{
+    showSlangLearn(Math.min(getSlangProgress(), slangGroups.length-1));
+  });
+  document.getElementById("slangToQuizBtn").addEventListener("click", ()=> startSlangQuiz(slangGroupIndex));
+  document.getElementById("slangQuitBtn").addEventListener("click", ()=>{
+    showScreen("start");
+    renderBests();
   });
 
   const confirmOverlay = document.getElementById("confirmOverlay");
@@ -1323,7 +1638,22 @@
     showScreen("start");
     renderBests();
   });
-  document.getElementById("retryBtn").addEventListener("click", ()=> requestStartQuiz(currentMode, currentTimed));
+  document.getElementById("retryBtn").addEventListener("click", ()=>{
+    if(currentMode && currentMode.indexOf("slangGroup") === 0){
+      if(lastSlangPassed){
+        if(slangGroupIndex === slangGroups.length-1){
+          showScreen("start");
+          renderBests();
+        } else {
+          showSlangLearn(slangGroupIndex+1);
+        }
+      } else {
+        showSlangLearn(slangGroupIndex);
+      }
+    } else {
+      requestStartQuiz(currentMode, currentTimed);
+    }
+  });
 
   // ---------- TIME SETTINGS MODAL ----------
   const timeSettingsOverlay = document.getElementById("timeSettingsOverlay");
@@ -1439,7 +1769,7 @@
         + '<div class="time-question-label">Как сказать это время?</div>'
         + '<div class="time-answer-line">Ответ: <span class="gap" id="answerSlot">___</span></div>';
     } else {
-      qText = q.prompt + ' <span class="answer-line">— <span class="gap" id="answerSlot">___</span></span>';
+      qText = q.prompt + (q.category === "slang" ? '<br>' : ' ') + '<span class="answer-line">— <span class="gap" id="answerSlot">___</span></span>';
     }
     document.getElementById("questionText").innerHTML = qText;
 
@@ -1449,7 +1779,7 @@
 
     const grid = document.getElementById("optionsGrid");
     grid.innerHTML = "";
-    q.shuffledOptions.forEach(optText=>{
+    (q.shuffledOptions || q.options).forEach(optText=>{
       const b = document.createElement("button");
       b.className = "option";
       b.textContent = optText;
@@ -1581,7 +1911,16 @@
     document.getElementById("progressFill").style.width = "100%";
     const total = answers.length;
     const score = answers.filter(a=>a.isCorrect).length;
+
+    if(currentMode && currentMode.indexOf("slangGroup") === 0){
+      finishSlangGroup(score, total);
+      return;
+    }
+
+    document.getElementById("retryBtn").textContent = "Пройти ещё раз";
     const isNewBest = setBest(currentMode, score, total);
+    setAttempted(currentMode, currentTimed);
+    if(score === total){ setPassed(currentMode, currentTimed); }
 
     document.getElementById("resultScore").textContent = score + "/" + total;
     document.getElementById("resultPercent").textContent = Math.round(score/total*100) + "% правильных";
@@ -1640,6 +1979,7 @@
     showScreen("result");
   }
 
+  checkCookieSupport();
   renderBests();
   updateCounts();
 })();
