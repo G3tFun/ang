@@ -1313,6 +1313,10 @@
 
   function finishSlangGroup(score, total){
     lastSlangPassed = (score === total);
+    if(lastSlangPassed){
+      setSlangProgress(slangGroupIndex + 1);
+      updateSlangProgressLabel();
+    }
     showScreen("result");
     document.getElementById("resultScore").textContent = score + "/" + total;
     document.getElementById("resultPercent").textContent = lastSlangPassed
